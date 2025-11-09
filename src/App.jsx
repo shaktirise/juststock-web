@@ -172,7 +172,6 @@ function Signup() {
           value={form.name}
           onChange={onChange}
           className="mt-1 block w-full rounded-lg border-gray-300 focus:border-primary focus:ring-primary text-sm"
-          placeholder="Jane Doe"
         />
       </div>
 
@@ -236,7 +235,7 @@ function Signup() {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700">Referral code (optional)</label>
+        <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700">Referral code</label>
         <input
           id="referralCode"
           name="referralCode"
