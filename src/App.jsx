@@ -41,8 +41,17 @@ function Signup() {
   useEffect(() => {
     try {
       const path = window.location.pathname || ''
+      // Pattern 1: /d/<code> or /ref/<code> or /invite/<code>
       const m = path.match(/\/(d|ref|invite)\/([A-Za-z0-9_-]+)/i)
-      const pathCode = m && m[2] ? m[2] : null
+      let pathCode = m && m[2] ? m[2] : null
+      // Pattern 2: single root segment that looks like a code => /<code>
+      if (!pathCode) {
+        const trimmed = path.replace(/^\/+|\/+$/g, '')
+        const reserved = new Set(['assets'])
+        if (trimmed && !trimmed.includes('/') && /^[A-Za-z0-9_-]{4,}$/i.test(trimmed) && !reserved.has(trimmed.toLowerCase())) {
+          pathCode = trimmed
+        }
+      }
 
       const qs = new URLSearchParams(window.location.search || '')
       const hashQs = new URLSearchParams((window.location.hash || '').replace(/^#/, ''))

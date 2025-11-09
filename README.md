@@ -32,6 +32,15 @@ Single-page React app with Tailwind CSS:
 - Tokens are saved to `localStorage` as `token`, `refreshToken`, etc., so follow-up API calls can use `Authorization: Bearer <token>`.
 - To change the download URL or API endpoint, edit `src/App.jsx` (`API_URL`, `DOWNLOAD_URL`).
 
+## Referral Links
+- Supported URL formats to auto-fill the referral code field:
+  - `https://juststock.vercel.app/ABC123` (single segment at root)
+  - `https://juststock.vercel.app/ref/ABC123`
+  - `https://juststock.vercel.app/d/ABC123`
+  - `https://juststock.vercel.app/invite/ABC123`
+  - Query variants like `?ref=ABC123`, `?referral=ABC123`, `?referralCode=ABC123`, `?r=ABC123`
+- The code is stored in `localStorage` as `referralCode` for subsequent visits.
+
 ## Fields
 - name (required)
 - email (required)

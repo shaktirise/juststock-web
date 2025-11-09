@@ -8,19 +8,36 @@
   <body>
     <div id="root"></div>
     <script>
-      // If the app is opened on /d/:code (or /ref/:code, /invite/:code),
-      // normalize to /?ref=:code so the SPA can pick it up even without server rewrites.
+      // Normalize common referral URL patterns to query `?ref=<CODE>`
+      // Supported:
+      // - /d/<code>, /ref/<code>, /invite/<code>
+      // - /<code>  (single segment at root)
       (function () {
         try {
-          var m = (location.pathname || '').match(/\/(d|ref|invite)\/([A-Za-z0-9_-]+)/i);
-          if (m && m[2]) {
-            var code = m[2];
-            var base = location.origin + location.pathname.replace(/\/(d|ref|invite)\/.*/, '/');
-            var search = location.search;
-            var params = new URLSearchParams(search);
-            if (!params.get('ref') && !params.get('referral') && !params.get('referralCode') && !params.get('r')) {
-              params.set('ref', code);
+          var pathname = location.pathname || '';
+          var params = new URLSearchParams(location.search || '');
+
+          // Already present? Nothing to do.
+          if (params.get('ref') || params.get('r') || params.get('referral') || params.get('referralCode')) return;
+
+          var code = null;
+
+          // Pattern 1: /d/<code> or /ref/<code> or /invite/<code>
+          var m1 = pathname.match(/\/(d|ref|invite)\/([A-Za-z0-9_-]+)/i);
+          if (m1 && m1[2]) code = m1[2];
+
+          // Pattern 2: single root segment that looks like a code => /<code>
+          if (!code) {
+            var trimmed = pathname.replace(/^\/+|\/+$/g, '');
+            var reserved = { assets: true };
+            if (trimmed && !trimmed.includes('/') && /^[A-Za-z0-9_-]{4,}$/i.test(trimmed) && !reserved[trimmed.toLowerCase()]) {
+              code = trimmed;
             }
+          }
+
+          if (code) {
+            params.set('ref', code);
+            var base = location.origin + '/';
             var newUrl = base + '?' + params.toString();
             history.replaceState(null, '', newUrl);
           }
