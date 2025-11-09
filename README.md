@@ -14,7 +14,18 @@ Single-page React app with Tailwind CSS:
    - `npm run dev`
 3. Build for production:
    - `npm run build`
-   - `npm run preview`
+- `npm run preview`
+
+## Deploy (Vercel)
+- This repo is Vercel-ready. Vercel auto-detects Vite and builds to `dist`.
+- Client-side routing is supported via `vercel.json` rewrite to `/`.
+- Steps:
+  - Push to a Git provider (GitHub/GitLab/Bitbucket).
+  - Import the repo in Vercel and keep defaults:
+    - Framework: Vite
+    - Build Command: `npm run build`
+    - Output Directory: `dist`
+  - Or use CLI: `npm i -g vercel && vercel && vercel --prod`.
 
 ## Notes
 - Success response expected (201) with `token`, `tokenExpiresAt`, `refreshToken`, `refreshTokenExpiresAt`, and `user`.
@@ -31,4 +42,3 @@ Single-page React app with Tailwind CSS:
 
 ## Styling
 - Tailwind config defines `primary` color shades (dark red). Buttons and focus states use this color.
-
