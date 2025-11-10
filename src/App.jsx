@@ -101,7 +101,7 @@ function Signup({ short }) {
 
       const stored = localStorage.getItem('referralCode')
       const code = queryCode || pathCode || stored || ''
-      const locked = Boolean(queryCode || pathCode)
+      const locked = Boolean(queryCode || pathCode || stored)
 
       if (code) {
         setForm((f) => ({ ...f, referralCode: f.referralCode || code }))
@@ -288,6 +288,7 @@ function Signup({ short }) {
             value={form.referralCode}
             onChange={onChange}
             readOnly={refLocked}
+            disabled={refLocked}
             aria-readonly={refLocked}
             className={
               refInputBase + (refLocked ? 'bg-gray-50 text-gray-600 border-gray-200 cursor-not-allowed' : '')
