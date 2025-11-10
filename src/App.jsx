@@ -6,13 +6,9 @@ const DOWNLOAD_URL = 'https://juststock.in/assets/app/app-release.apk'
 export default function App() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Background watermark brand name */}
-      <div aria-hidden className="pointer-events-none select-none fixed inset-0 flex items-center justify-center">
-        <span className="text-primary/10 text-6xl sm:text-7xl md:text-8xl font-extrabold tracking-wider uppercase">JustStock</span>
-      </div>
       {/* Foreground gradient layer with content */}
-      <div className="relative h-full flex items-center justify-center bg-gradient-to-b from-primary/10 to-white px-4">
-        <div className="w-full max-w-md">
+      <div className="relative h-full flex items-center justify-center bg-gradient-to-b from-rose-50 via-white to-rose-100 px-4">
+        <div className="w-full max-w-lg">
           <Header />
           <Signup />
         </div>
@@ -24,11 +20,8 @@ export default function App() {
 function Header() {
   return (
     <div className="text-center mb-4">
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center gap-2">
         <HeadingImage />
-        <div className="inline-flex items-center gap-2">
-          <span className="text-lg font-semibold text-primary">JustStock</span>
-        </div>
       </div>
     </div>
   )
@@ -40,7 +33,7 @@ function HeadingImage() {
     <img
       src={src}
       alt="JustStock"
-      className="mx-auto h-20 object-contain"
+      className="mx-auto h-24 sm:h-28 md:h-32 object-contain drop-shadow-md"
       loading="eager"
       decoding="async"
     />
@@ -299,7 +292,7 @@ function Signup() {
         <input
           id="agree"
           type="checkbox"
-          className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+          className="mt-1 h-4 w-4 rounded border-gray-300 accent-primary focus:ring-primary"
           checked={agree}
           onChange={(e) => setAgree(e.target.checked)}
           required
@@ -316,7 +309,7 @@ function Signup() {
       <button
         type="submit"
         disabled={loading || !agree}
-        className="w-full inline-flex items-center justify-center rounded-lg bg-primary px-4 py-3 text-white font-semibold hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-60"
+        className="w-full inline-flex items-center justify-center rounded-lg px-4 py-3 text-white font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:from-primary disabled:to-primary transition-colors"
       >
         {loading ? 'Signing up...' : 'Agree and continue'}
       </button>
