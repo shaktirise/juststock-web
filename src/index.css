@@ -13,5 +13,7 @@ html, body {
 
 body {
   @apply bg-primary/5 text-gray-900 antialiased;
-  overflow: hidden;
+  /* Allow vertical scrolling and prevent horizontal overflow */
+  overflow-x: hidden;
+  overflow-y: auto;
 }

@@ -4,43 +4,52 @@ const API_URL = 'https://backend-server-11f5.onrender.com/api/auth/signup'
 const DOWNLOAD_URL = 'https://juststock.in/assets/app/app-release.apk'
 
 export default function App() {
+  const [short, setShort] = useState(false)
+
+  useEffect(() => {
+    const update = () => setShort(window.innerHeight <= 720)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-x-hidden">
       {/* Foreground gradient layer with content */}
-      <div className="relative h-full flex items-center justify-center bg-gradient-to-b from-rose-50 via-white to-rose-100 px-4">
-        <div className="w-full max-w-lg">
-          <Header />
-          <Signup />
+      <div className="relative min-h-screen flex items-start justify-center bg-gradient-to-b from-rose-50 via-white to-rose-100 px-3 sm:px-4 pt-0 sm:pt-2 md:pt-4 pb-8">
+        <div className="w-full max-w-xl">
+          <Header short={short} />
+          <Signup short={short} />
         </div>
       </div>
     </div>
   )
 }
 
-function Header() {
+function Header({ short }) {
   return (
-    <div className="text-center mb-4">
-      <div className="flex flex-col items-center gap-2">
-        <HeadingImage />
-      </div>
-    </div>
+    <header className="text-center mb-0" role="banner">
+      <h1 className="m-0 leading-none">
+        <HeadingImage short={short} />
+      </h1>
+    </header>
   )
 }
 
-function HeadingImage() {
+function HeadingImage({ short }) {
   const src = 'https://res.cloudinary.com/dspnn81nn/image/upload/v1762768335/EDU_JS_PNG_ijxbfm.png'
   return (
     <img
       src={src}
       alt="JustStock"
-      className="mx-auto h-24 sm:h-28 md:h-32 object-contain drop-shadow-md"
+      className={(short ? 'h-20' : 'h-28 sm:h-32 md:h-44 lg:h-56') + ' block mx-auto object-contain drop-shadow-lg'}
       loading="eager"
       decoding="async"
     />
   )
 }
 
-function Signup() {
+function Signup({ short }) {
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -128,6 +137,7 @@ function Signup() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          fullName: form.name,
           name: form.name,
           email: form.email,
           password: form.password,
@@ -180,24 +190,37 @@ function Signup() {
     )
   }
 
+  const groupCls = short ? 'mb-1' : 'mb-2 sm:mb-3'
+  const labelCls = short ? 'block text-[12px] font-medium text-gray-700' : 'block text-[13px] sm:text-sm font-medium text-gray-700'
+  const inputCls = short
+    ? 'mt-1 block w-full h-9 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-3 py-2'
+    : 'mt-1 block w-full h-10 sm:h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm sm:text-base placeholder-gray-400 px-3 sm:px-4 py-2.5 sm:py-3'
+  const refInputBase = short
+    ? 'mt-1 block w-full h-9 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 pr-10 px-3 py-2 '
+    : 'mt-1 block w-full h-10 sm:h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm sm:text-base placeholder-gray-400 pr-10 px-3 sm:px-4 py-2.5 sm:py-3 '
+  const btnCls =
+    'w-full inline-flex items-center justify-center rounded-lg text-white font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:from-primary disabled:to-primary transition-colors ' +
+    (short ? 'px-3 py-2' : 'px-4 py-2.5 sm:py-3')
+
   return (
-    <form onSubmit={onSubmit} className="bg-white border border-gray-200 rounded-2xl shadow-lg p-5">
-      <div className="mb-3">
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full name</label>
+    <form onSubmit={onSubmit} className={(short ? '-mt-8' : '-mt-6 sm:-mt-5 md:-mt-6') + ' bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-3 sm:p-5'}>
+      <div className={groupCls}>
+        <label htmlFor="name" className={labelCls}>Full Name</label>
         <input
           id="name"
           name="name"
           type="text"
           autoComplete="name"
+          autoFocus
           required
           value={form.name}
           onChange={onChange}
-          className="mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-4 py-3"
+          className={inputCls}
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+      <div className={groupCls}>
+        <label htmlFor="email" className={labelCls}>Email</label>
         <input
           id="email"
           name="email"
@@ -206,13 +229,13 @@ function Signup() {
           required
           value={form.email}
           onChange={onChange}
-          className="mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-4 py-3"
+          className={inputCls}
           placeholder="jane@example.com"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">Mobile</label>
+      <div className={groupCls}>
+        <label htmlFor="mobile" className={labelCls}>Mobile</label>
         <input
           id="mobile"
           name="mobile"
@@ -222,13 +245,13 @@ function Signup() {
           required
           value={form.mobile}
           onChange={onChange}
-          className="mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-4 py-3"
+          className={inputCls}
           placeholder="9876543210"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+      <div className={groupCls}>
+        <label htmlFor="password" className={labelCls}>Password</label>
         <input
           id="password"
           name="password"
@@ -236,13 +259,13 @@ function Signup() {
           required
           value={form.password}
           onChange={onChange}
-          className="mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-4 py-3"
+          className={inputCls}
           placeholder="StrongPass123!"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm password</label>
+      <div className={groupCls}>
+        <label htmlFor="confirmPassword" className={labelCls}>Confirm password</label>
         <input
           id="confirmPassword"
           name="confirmPassword"
@@ -250,13 +273,13 @@ function Signup() {
           required
           value={form.confirmPassword}
           onChange={onChange}
-          className="mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 px-4 py-3"
+          className={inputCls}
           placeholder="StrongPass123!"
         />
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="referralCode" className="block text-sm font-medium text-gray-700">Referral code</label>
+      <div className={groupCls}>
+        <label htmlFor="referralCode" className={labelCls}>Referral code</label>
         <div className="relative">
           <input
             id="referralCode"
@@ -267,8 +290,7 @@ function Signup() {
             readOnly={refLocked}
             aria-readonly={refLocked}
             className={
-              "mt-1 block w-full h-12 rounded-lg border border-gray-300 focus:border-primary focus:ring-primary text-sm placeholder-gray-400 pr-10 px-4 py-3 " +
-              (refLocked ? "bg-gray-50 text-gray-600 border-gray-200 cursor-not-allowed" : "")
+              refInputBase + (refLocked ? 'bg-gray-50 text-gray-600 border-gray-200 cursor-not-allowed' : '')
             }
             placeholder="ABCD12"
           />
@@ -288,7 +310,7 @@ function Signup() {
         )}
       </div>
 
-      <div className="mb-3 flex items-start gap-2">
+      <div className="mb-2 sm:mb-3 flex items-start gap-2">
         <input
           id="agree"
           type="checkbox"
@@ -297,7 +319,7 @@ function Signup() {
           onChange={(e) => setAgree(e.target.checked)}
           required
         />
-        <label htmlFor="agree" className="text-xs text-gray-600">
+        <label htmlFor="agree" className={short ? 'text-[11px] text-gray-600' : 'text-[11px] sm:text-xs text-gray-600'}>
           I agree to the <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
         </label>
       </div>
@@ -309,10 +331,11 @@ function Signup() {
       <button
         type="submit"
         disabled={loading || !agree}
-        className="w-full inline-flex items-center justify-center rounded-lg px-4 py-3 text-white font-semibold bg-gradient-to-r from-primary to-primary-light hover:from-primary-dark hover:to-primary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:from-primary disabled:to-primary transition-colors"
+        className={btnCls}
       >
         {loading ? 'Signing up...' : 'Agree and continue'}
       </button>
     </form>
   )
 }
+
